@@ -1,0 +1,17 @@
+.backup_me {
+  &__backup {
+    margin-bottom: 20px;
+    width: 33%;
+    background: #ffffff;
+    box-shadow: 2px 2px 2px #ccc;
+    border-top: 1px solid #eeeeee;
+    border-left: 1px solid #eeeeee;
+    padding: 0 20px 20px 20px;
+  }
+  &__backup-file {
+    display: inline-block;
+    overflow: hidden;
+    text-align: center;
+    padding: 5px;
+  }
+}

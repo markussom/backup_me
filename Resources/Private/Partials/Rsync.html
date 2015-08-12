@@ -1,0 +1,55 @@
+<f:form class="typo3-form" object="{rSync}" action="rSync">
+
+	<f:render partial="Rsync" />
+	<fieldset>
+		<legend>Server Daten:</legend>
+		<div>
+			<label for="r_sync__remote-path">SSH Host:</label>
+			<f:form.textfield id="r_sync__remote-path" name="rSync[remoteHost]" />
+		</div>
+		<div>
+			<label for="r_sync__remote-path">Entfernter Pfad:</label>
+			<f:form.textfield id="r_sync__remote-path" name="rSync[remotePath]" />
+		</div>
+		<div>
+			<label for="r_sync__username">Benutzername:</label>
+			<f:form.textfield id="r_sync__username" name="rSync[username]" />
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Locale Daten:</legend>
+		<div>
+			<label for="r_sync__remote-path">Lokaler Pfad:</label>
+			<f:form.textfield id="r_sync__remote-path" name="rSync[localPath]" value="{pathSite}"/>
+		</div>
+	</fieldset>
+	<fieldset>
+		<div>
+			<label for="r_sync__folder-fileadmin">Fileadmin
+				<input id="r_sync__folder-fileadmin" value="fileadmin" name="rSync[folders][]" type="checkbox">
+			</label>
+		</div>
+		<div>
+			<label for="r_sync__folder-uploads">Uploads
+				<input id="r_sync__folder-uploads" value="uploads" name="rSync[folders][]" type="checkbox">
+			</label>
+		</div>
+		<div>
+			<label for="r_sync__folder-custom">Eigene Ordner getrennt durch ";"</label>
+			<input id="r_sync__folder-custom" name="rSync[folders][]" type="text">
+		</div>
+	</fieldset>
+	<button type="submit">rSync Datei erstellen</button>
+</f:form>
+
+<div>
+	Derzeitige rSync Datei
+</div>
+<div>
+	{rSyncFile -> f:format.nl2br()}
+</div>
+<div>
+	Der rSync kann mit dem Befehl<br />
+	{pathSite}rsync.sh <br />
+	starten
+</div>

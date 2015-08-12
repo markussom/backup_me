@@ -1,0 +1,57 @@
+<f:layout name="Default"/>
+<f:section name="content">
+    <f:flashMessages/>
+    <h2>Backup der Dateien</h2>
+    <f:if condition="{fileBackups}">
+        <f:then>
+            <div class="backup_me__folders">
+                <f:for each="{fileBackups}" as="folder">
+                    <div class="backup_me__backup">
+                        <h3>{folder.0.folder}</h3>
+                        <f:for each="{folder}" as="file">
+                            <a class="backup_me__backup-file" href="/backup/files/{file.folder}/{file.filename}">
+                                <img src="../typo3conf/ext/backup_me/Resources/Public/Icons/download_file.png"
+                                     width="30"
+                                     height="30">
+
+                                <div>
+                                    {file.folder}<br/>
+                                    <f:format.date format="d.m.Y">@{file.date}</f:format.date>
+                                </div>
+                            </a>
+                        </f:for>
+                    </div>
+                </f:for>
+            </div>
+        </f:then>
+        <f:else>
+            <p>Kein Backup vorhanden</p>
+        </f:else>
+    </f:if>
+
+    <f:if condition="{databaseBackups}">
+        <f:then>
+            <div class="backup_me__folders">
+                <div class="backup_me__backup">
+                    <h2>Backup der Datenbank</h2>
+
+                    <f:for each="{databaseBackups}" as="database">
+                        <a class="backup_me__backup-file" href="/backup/database/{database.filename}">
+                            <img src="../typo3conf/ext/backup_me/Resources/Public/Icons/download_file.png" width="30"
+                                 height="30">
+
+                            <div>
+                                {database.folder}<br/>
+                                <f:format.date format="d.m.Y">@{database.date}</f:format.date>
+                            </div>
+
+                        </a>
+                    </f:for>
+                </div>
+            </div>
+        </f:then>
+        <f:else>
+            <p>Kein Backup vorhanden</p>
+        </f:else>
+    </f:if>
+</f:section>

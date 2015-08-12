@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-07-10T23:35:45Z" product-name="backup_me">
+		<header/>
+		<body>
+			<trans-unit id="tx_backupme_domain_model_backup">
+				<source>Backup</source>
+			</trans-unit>
+			<trans-unit id="tx_backupme_domain_model_backup.title">
+				<source>Title</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
