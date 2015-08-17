@@ -1,22 +1,39 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: markussommer
- * Date: 16.07.15 | 29
- * Time: 17:01
- */
-
 namespace Markussom\BackupMe\Command;
+
+/***************************************************************
+ *
+ *  Copyright notice
+ *
+ *  (c) 2015 Markus Sommer <markussom@me.com>, CreativeWorkspace
+ *
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
 
 use Markussom\BackupMe\Utility\BackupUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
+ * TODO: inject BackupUtility and use non-static methods
  * Class FileBackupCommandController
  *
- * @package Markussom\BackupMe\Command
  * @author Markus Sommer
  */
 class BackupCommandController extends CommandController {
@@ -36,9 +53,9 @@ class BackupCommandController extends CommandController {
 	 *
 	 * @param string $folder Folder to backup
 	 * @param int $backupsToKeep Backups to keep
+	 * @return void
 	 */
 	public function filesBackupCommand($folder, $backupsToKeep = 3) {
-		/** @var string backupPath set backup path */
 		$this->backupPath = PATH_site . 'backup/files/' . $folder . '/';
 		$this->backupsToKeep = $backupsToKeep;
 
@@ -48,9 +65,9 @@ class BackupCommandController extends CommandController {
 
 	/**
 	 * @param int $backupsToKeep
+	 * @return void
 	 */
 	public function dbBackupCommand($backupsToKeep = 3) {
-		/** @var string backupPath set backup path */
 		$this->backupPath = PATH_site . 'backup/database/';
 		$this->backupsToKeep = $backupsToKeep;
 

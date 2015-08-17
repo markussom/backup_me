@@ -25,6 +25,7 @@ namespace Markussom\BackupMe\Controller;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use Markussom\BackupMe\Utility\BackupUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -33,7 +34,6 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
  * Class BackupController
  *
  * @author Markus Sommer
- * @package Markussom\BackupMe\Controller
  */
 class BackupController extends ActionController {
 
@@ -43,10 +43,11 @@ class BackupController extends ActionController {
 	 * @return void
 	 */
 	public function indexAction() {
-		$getBackupedDirs = GeneralUtility::get_dirs(PATH_site . 'backup/files/');
-		if (is_array($getBackupedDirs)) {
-			foreach ($getBackupedDirs as $getBackupedDir) {
-				$fileBackups[$getBackupedDir] = self::getBackupsByFile('backup/files/' . $getBackupedDir . '/backup.log');
+		$backupDirectories = GeneralUtility::get_dirs(PATH_site . 'backup/files/');
+		if (is_array($backupDirectories)) {
+			foreach ($backupDirectories as $backupDirectory) {
+				$fileBackups[$backupDirectory] =
+					self::getBackupsByFile('backup/files/' . $backupDirectory . '/backup.log');
 			}
 		}
 		if (!empty($fileBackups)) {
@@ -66,6 +67,7 @@ class BackupController extends ActionController {
 	 */
 	public function dbBackupAction() {
 		$path = BackupUtility::backupTable(PATH_site . 'backup/database/');
+		// TODO: translate messages
 		$this->addFlashMessage('Datei geschieben ' . $path, 'Backup vollständig');
 		$this->forward('index');
 	}
@@ -73,8 +75,7 @@ class BackupController extends ActionController {
 	/**
 	 * Remove empty values from array Recursively
 	 *
-	 * @param array $array The givin array
-	 *
+	 * @param array $array The given array
 	 * @return void
 	 */
 	static public function removeEmptyValuesRecursively(array &$array = array()) {
@@ -91,7 +92,6 @@ class BackupController extends ActionController {
 	 * Get the files from Log
 	 *
 	 * @param string $logfile The log file
-	 *
 	 * @return array|string
 	 */
 	protected function getBackupsByFile($logfile) {
@@ -105,6 +105,7 @@ class BackupController extends ActionController {
 			self::removeEmptyValuesRecursively($backupArray);
 			return $backupArray;
 		}
+		// FIXME: return empty array instead
 		return '';
 	}
 }

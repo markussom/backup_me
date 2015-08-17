@@ -1,19 +1,60 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: markussommer
- * Date: 28.07.15 | 31
- * Time: 13:36
- */
-
 namespace Markussom\BackupMe\Utility;
 
+/***************************************************************
+ *
+ *  Copyright notice
+ *
+ *  (c) 2015 Markus Sommer <markussom@me.com>, CreativeWorkspace
+ *
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
+/**
+ * Class BackupUtility
+ *
+ * @author Markus Sommer
+ */
 class BackupUtility {
 
+	/**
+	 * Exclude these tables from the database dump
+	 *
+	 * @var array
+	 */
+	protected $excludeTableNames = array('sys_log', 'sys_history');
+
+	/**
+	 * Exclude any table matching this pattern from the database dump
+	 *
+	 * @var string
+	 */
+	protected $excludeTablePattern = '/^(cf_|cache).*/';
+
+	/**
+	 * TODO: replace the $link stuff by usage of $GLOBALS['TYPO3_DB']
+	 *
+	 * @param string $outputFolder
+	 * @return string
+	 */
 	public static function backupTable($outputFolder) {
 		GeneralUtility::mkdir_deep($outputFolder);
 		$host = $GLOBALS['TYPO3_CONF_VARS']['DB']['host'];
@@ -22,10 +63,10 @@ class BackupUtility {
 		$name = $GLOBALS['TYPO3_CONF_VARS']['DB']['database'];
 		$link = mysqli_connect($host, $user, $pass);
 		mysqli_select_db($link, $name);
-		$listdbtables = array_column(mysqli_fetch_all($link->query('SHOW TABLES')), 0);
-		self::removeCacheAndLogTables($listdbtables);
+		$listDbTables = array_column(mysqli_fetch_all($link->query('SHOW TABLES')), 0);
+		self::removeCacheAndLogTables($listDbTables);
 		$return = '';
-		foreach ($listdbtables as $table) {
+		foreach ($listDbTables as $table) {
 			$result = mysqli_query($link, 'SELECT * FROM ' . $table);
 			$numFields = mysqli_num_fields($result);
 
@@ -64,18 +105,19 @@ class BackupUtility {
 	}
 
 	/**
-	 * @param array $listdbtables
+	 * TODO: do not use reference, use return value instead
+	 *
+	 * @param array $listDbTables
+	 * @return void
 	 */
-	private function removeCacheAndLogTables(array &$listdbtables = array()) {
-		foreach ($listdbtables as $index => $listdbtable) {
-			if (preg_match('/^(cf|cache).*/', $listdbtable)) {
-				unset($listdbtables[$index]);
-			}
-			if (preg_match('/^(sys_log|sys_history).*/', $listdbtable)) {
-				unset($listdbtables[$index]);
+	protected function removeCacheAndLogTables(array &$listDbTables = array()) {
+		foreach ($listDbTables as $index => $listDbTable) {
+			if (preg_match($this->excludeTablePattern, $listDbTable)) {
+				unset($listDbTables[$index]);
+			} elseif (in_array($listDbTable, $this->excludeTableNames)) {
+				unset($listDbTables[$index]);
 			}
 		}
-
 	}
 
 	/**
@@ -90,32 +132,34 @@ class BackupUtility {
 	 * @return string New filename (with .gz appended) if success, or false if operation fails
 	 */
 	public static function gzCompressFile($source, $level = 9) {
-		$dest = $source . '.gz';
+		$destination = $source . '.gz';
 		$mode = 'wb' . $level;
 		$error = FALSE;
-		if (($fpOut = gzopen($dest, $mode))) {
+		if (($fpOut = gzopen($destination, $mode))) {
 			if (($fpIn = fopen($source, 'rb'))) {
-				while (!feof($fpIn))
+				while (!feof($fpIn)) {
 					gzwrite($fpOut, fread($fpIn, 1024 * 512));
+				}
 				fclose($fpIn);
 			} else {
-				$error = true;
+				$error = TRUE;
 			}
 			gzclose($fpOut);
 		} else {
-			$error = true;
+			$error = TRUE;
 		}
 		if ($error) {
-			return false;
+			return FALSE;
 		}
 		unlink($source);
-		return $dest;
+		return $destination;
 	}
 
 	/**
-	 * @param $folder
-	 * @param $backupFileName
-	 *
+	 * @param string $folder
+	 * @param string $backupFileName
+	 * @param string $backupPath
+	 * @param int $backupsToKeep
 	 * @return bool
 	 */
 	public static function generateBackupLog($folder, $backupFileName, $backupPath, $backupsToKeep) {
@@ -124,7 +168,7 @@ class BackupUtility {
 			array(
 				'date' => time(),
 				'folder' => $folder,
-				'filename' => $backupFileName
+				'filename' => $backupFileName,
 			)
 		);
 
@@ -149,6 +193,8 @@ class BackupUtility {
 	}
 
 	/**
+	 * TODO: do not use reference, use return value instead
+	 *
 	 * @param array $array
 	 */
 	static public function removeEmptyValuesRecursively(array &$array = array()) {
