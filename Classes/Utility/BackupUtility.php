@@ -174,7 +174,7 @@ class BackupUtility {
 		$file = $backupPath . 'backup.log';
 		if (file_exists($file)) {
 			$current = explode(PHP_EOL, file_get_contents($file));
-			self::removeEmptyValuesRecursively($current);
+			$current = self::removeEmptyValuesRecursively($current);
 			while (count($current) > $backupsToKeep - 1) {
 				reset($current);
 				unset($current[key($current)]);
@@ -192,18 +192,18 @@ class BackupUtility {
 	}
 
 	/**
-	 * TODO: do not use reference, use return value instead
-	 *
 	 * @param array $array
+	 * @return array
 	 */
-	static public function removeEmptyValuesRecursively(array &$array = array()) {
+	static public function removeEmptyValuesRecursively(array $array = array()) {
 		foreach ($array as $index => $value) {
 			if (empty($value)) {
 				unset($array[$index]);
 			} elseif (is_array($value)) {
-				self::removeEmptyValuesRecursively($value);
+				$array = self::removeEmptyValuesRecursively($value);
 			}
 		}
+		return $array;
 	}
 
 	/**
