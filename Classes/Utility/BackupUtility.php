@@ -40,14 +40,14 @@ class BackupUtility {
 	 *
 	 * @var array
 	 */
-	protected $excludeTableNames = array('sys_log', 'sys_history');
+	protected static $excludeTableNames = array('sys_log', 'sys_history');
 
 	/**
 	 * Exclude any table matching this pattern from the database dump
 	 *
 	 * @var string
 	 */
-	protected $excludeTablePattern = '/^(cf_|cache).*/';
+	protected static $excludeTablePattern = '/^(cf_|cache).*/';
 
 	/**
 	 * TODO: replace the $link stuff by usage of $GLOBALS['TYPO3_DB']
@@ -110,11 +110,11 @@ class BackupUtility {
 	 * @param array $listDbTables
 	 * @return void
 	 */
-	protected function removeCacheAndLogTables(array &$listDbTables = array()) {
+	protected static function removeCacheAndLogTables(array &$listDbTables = array()) {
 		foreach ($listDbTables as $index => $listDbTable) {
-			if (preg_match($this->excludeTablePattern, $listDbTable)) {
+			if (preg_match(self::$excludeTablePattern, $listDbTable)) {
 				unset($listDbTables[$index]);
-			} elseif (in_array($listDbTable, $this->excludeTableNames)) {
+			} elseif (in_array($listDbTable, self::$excludeTableNames)) {
 				unset($listDbTables[$index]);
 			}
 		}
