@@ -64,7 +64,7 @@ class BackupUtility {
 		$link = mysqli_connect($host, $user, $pass);
 		mysqli_select_db($link, $name);
 		$listDbTables = array_column(mysqli_fetch_all($link->query('SHOW TABLES')), 0);
-		self::removeCacheAndLogTables($listDbTables);
+		$listDbTables = self::removeCacheAndLogTables($listDbTables);
 		$return = '';
 		foreach ($listDbTables as $table) {
 			$result = mysqli_query($link, 'SELECT * FROM ' . $table);
@@ -105,12 +105,10 @@ class BackupUtility {
 	}
 
 	/**
-	 * TODO: do not use reference, use return value instead
-	 *
 	 * @param array $listDbTables
-	 * @return void
+	 * @return array
 	 */
-	protected static function removeCacheAndLogTables(array &$listDbTables = array()) {
+	protected static function removeCacheAndLogTables(array $listDbTables = array()) {
 		foreach ($listDbTables as $index => $listDbTable) {
 			if (preg_match(self::$excludeTablePattern, $listDbTable)) {
 				unset($listDbTables[$index]);
@@ -118,6 +116,7 @@ class BackupUtility {
 				unset($listDbTables[$index]);
 			}
 		}
+		return $listDbTables;
 	}
 
 	/**
