@@ -35,77 +35,82 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
  *
  * @author Markus Sommer
  */
-class BackupController extends ActionController {
+class BackupController extends ActionController
+{
 
-	/**
-	 * Action list
-	 *
-	 * @return void
-	 */
-	public function indexAction() {
-		$backupDirectories = GeneralUtility::get_dirs(PATH_site . 'backup/files/');
-		if (is_array($backupDirectories)) {
-			foreach ($backupDirectories as $backupDirectory) {
-				$fileBackups[$backupDirectory] =
-					self::getBackupsByFile('backup/files/' . $backupDirectory . '/backup.log');
-			}
-		}
-		if (!empty($fileBackups)) {
-			$this->view->assign('fileBackups', $fileBackups);
-		}
-		$databaseBackups = self::getBackupsByFile('backup/database/backup.log');
-		if (!empty($databaseBackups)) {
-			$this->view->assign('databaseBackups', $databaseBackups);
-		}
-		$this->view->assign('pathSite', PATH_site);
-	}
+    /**
+     * Action list
+     *
+     * @return void
+     */
+    public function indexAction()
+    {
+        $backupDirectories = GeneralUtility::get_dirs(PATH_site . 'backup/files/');
+        if (is_array($backupDirectories)) {
+            foreach ($backupDirectories as $backupDirectory) {
+                $fileBackups[$backupDirectory] =
+                    self::getBackupsByFile('backup/files/' . $backupDirectory . '/backup.log');
+            }
+        }
+        if (!empty($fileBackups)) {
+            $this->view->assign('fileBackups', $fileBackups);
+        }
+        $databaseBackups = self::getBackupsByFile('backup/database/backup.log');
+        if (!empty($databaseBackups)) {
+            $this->view->assign('databaseBackups', $databaseBackups);
+        }
+        $this->view->assign('pathSite', PATH_site);
+    }
 
-	/**
-	 * Database Backup Action
-	 *
-	 * @return void
-	 */
-	public function dbBackupAction() {
-		$path = BackupUtility::backupTable(PATH_site . 'backup/database/');
-		// TODO: translate messages
-		$this->addFlashMessage('Datei geschieben ' . $path, 'Backup vollständig');
-		$this->forward('index');
-	}
+    /**
+     * Database Backup Action
+     *
+     * @return void
+     */
+    public function dbBackupAction()
+    {
+        $path = BackupUtility::backupTable(PATH_site . 'backup/database/');
+        // TODO: translate messages
+        $this->addFlashMessage('Datei geschieben ' . $path, 'Backup vollständig');
+        $this->forward('index');
+    }
 
-	/**
-	 * Remove empty values from array Recursively
-	 *
-	 * @param array $array The given array
-	 * @return void
-	 */
-	static public function removeEmptyValuesRecursively(array &$array = array()) {
-		foreach ($array as $index => $value) {
-			if (empty($value)) {
-				unset($array[$index]);
-			} elseif (is_array($value)) {
-				self::removeEmptyValuesRecursively($value);
-			}
-		}
-	}
+    /**
+     * Remove empty values from array Recursively
+     *
+     * @param array $array The given array
+     * @return void
+     */
+    static public function removeEmptyValuesRecursively(array &$array = array())
+    {
+        foreach ($array as $index => $value) {
+            if (empty($value)) {
+                unset($array[$index]);
+            } elseif (is_array($value)) {
+                self::removeEmptyValuesRecursively($value);
+            }
+        }
+    }
 
-	/**
-	 * Get the files from Log
-	 *
-	 * @param string $logfile The log file
-	 * @return array|string
-	 */
-	protected function getBackupsByFile($logfile) {
-		$backupFile = PATH_site . $logfile;
-		if (file_exists($backupFile)) {
-			$backupArray = array();
-			$backupsLog = explode(PHP_EOL, file_get_contents($backupFile));
-			foreach ($backupsLog as $backupsLogLine) {
-				$backupArray[] = unserialize($backupsLogLine);
-			}
-			self::removeEmptyValuesRecursively($backupArray);
-			return $backupArray;
-		}
-		// FIXME: return empty array instead
-		return '';
-	}
+    /**
+     * Get the files from Log
+     *
+     * @param string $logfile The log file
+     * @return array|string
+     */
+    protected function getBackupsByFile($logfile)
+    {
+        $backupFile = PATH_site . $logfile;
+        if (file_exists($backupFile)) {
+            $backupArray = array();
+            $backupsLog = explode(PHP_EOL, file_get_contents($backupFile));
+            foreach ($backupsLog as $backupsLogLine) {
+                $backupArray[] = unserialize($backupsLogLine);
+            }
+            self::removeEmptyValuesRecursively($backupArray);
+            return $backupArray;
+        }
+        // FIXME: return empty array instead
+        return '';
+    }
 }

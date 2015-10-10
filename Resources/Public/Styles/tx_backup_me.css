@@ -1,1 +1,16 @@
-.backup_me__backup{margin-bottom:20px;width:33%;background:#ffffff;box-shadow:2px 2px 2px #ccc;border-top:1px solid #eeeeee;border-left:1px solid #eeeeee;padding:0 20px 20px 20px}.backup_me__backup-file{display:inline-block;overflow:hidden;text-align:center;padding:5px}
+.backup_me__backup {
+  margin-bottom: 20px;
+  width: 33%;
+  background: #ffffff;
+  box-shadow: 2px 2px 2px #ccc;
+  border-top: 1px solid #eeeeee;
+  border-left: 1px solid #eeeeee;
+  padding: 0 20px 20px 20px
+}
+
+.backup_me__backup-file {
+  display: inline-block;
+  overflow: hidden;
+  text-align: center;
+  padding: 5px
+}

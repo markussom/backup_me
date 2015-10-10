@@ -1,9 +1,9 @@
-
- # Module configuration
+# Module configuration
 module.tx_backupme {
 	persistence {
 		storagePid = {$module.tx_backupme.persistence.storagePid}
 	}
+
 	view {
 		templateRootPath = {$module.tx_backupme.view.templateRootPath}
 		partialRootPath = {$module.tx_backupme.view.partialRootPath}

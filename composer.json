@@ -1,7 +1,7 @@
 {
   "name": "markussom/backup_me",
   "type": "typo3-cms-extension",
-  "description": "RealURL: speaking paths for TYPO3",
+  "description": "Backup Extension for TYPO3 CMS",
   "homepage": "http://typo3.org",
   "license": "GPL-2.0+",
 

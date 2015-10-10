@@ -1,2 +1,2 @@
-	# cat=basic/enable/1; type=string; label=Server Pfad
+# cat=basic/enable/1; type=string; label=Server Pfad
 remoteServerPath =
